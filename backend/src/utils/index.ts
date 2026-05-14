@@ -3,6 +3,7 @@ import { ACCESS_JWT_SECRET, ACCESS_TOKEN_TTL } from '#config';
 import type { Types } from 'mongoose';
 import { randomUUID } from 'node:crypto';
 import { RefreshToken } from '#models';
+import type { CookieOptions } from 'express';
 
 type UserData = {
   _id: Types.ObjectId;
@@ -38,7 +39,7 @@ const createToken = async (userData: UserData) => {
   return { accessToken, refreshToken };
 };
 
-const getCookieOpts = () => ({
+const getCookieOpts = (): CookieOptions => ({
   // httpOnly: true → JavaScript im Browser kann diesen Cookie nicht lesen (document.cookie).
   // Schützt vor XSS-Angriffen, bei denen eingeschleuster Code Tokens stiehlt.
   httpOnly: true,
@@ -49,7 +50,7 @@ const getCookieOpts = () => ({
   // sameSite: 'none' → Cookie wird auch bei Cross-Origin-Requests mitgeschickt.
   // Notwendig, wenn Frontend und Backend auf unterschiedlichen Domains laufen.
   // 'none' erfordert zwingend secure: true.
-  sameSite: 'none' as const
+  sameSite: 'strict' as const
 
   // expires ist hier auskommentiert → der Access-Token-Cookie wird ein Session-Cookie.
   // Der Browser löscht ihn beim Schließen. Das Ablaufdatum steckt ohnehin im JWT selbst.

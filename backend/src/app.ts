@@ -29,6 +29,8 @@ app.use('/books', bookRoutes);
 app.use('*splat', notFoundHandler);
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`Auth Server listening on http://localhost:${PORT}`);
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => {
+  console.log(`Auth Server listening on http://localhost:${port}`);
 });
